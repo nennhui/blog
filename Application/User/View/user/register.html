@@ -1,0 +1,40 @@
+{extends file='D:\php_program\menu.html'}
+{block name=title}注册{/block}
+{block name=css}
+{/block}
+
+{block name=main_left}
+<div>
+	<div>*账号<input class="name"></div>
+	<div>*密码<input  class="pass"></div>
+	<div>邮箱<input  class="e-mail"></div>
+	<button onclick="submit()">提交</button>
+</div>
+{/block}
+{block name=script}
+<script type="text/javascript">
+function	submit(){
+	var params={}
+	params['name']=$('.name').val()
+	params['pass']=$('.pass').val()	
+	params['e-mail']=$('.e-mail').val()
+
+	$.ajax({
+		type:'post',
+		data:params,
+		url:'/user/user/register_up',
+		success:function(data){
+			if (data.code==1){
+				alert(data.message)
+				window.location.href='/index/index/index'
+			}
+			else{
+			alert(data.message)
+			 
+			 }
+		},
+	})
+
+}
+</script>
+{/block}

@@ -1,0 +1,111 @@
+{extends file='D:\php_program\menu.html'}
+{block name=title}上传文件{/block}
+{block name=css}
+    <style type="text/css">
+ {literal}
+        .content_text{font-size:1.2rem;padding-top:2rem }
+        .content_user{ margin:0 auto;padding: 2rem}
+        .content_user img {width :3rem;height: 3rem;border-radius: 3rem;}
+        .main_content,.article_answer,.my_answer {overflow:auto;height:auto;margin: 1rem;background: white;padding:1rem;text-align: left}
+        .main_content .title{text-align: center;}
+        .my_answer textarea{ height:6rem;width: 100% }
+        .my_answer button{height: 2rem ;background: #4eaa4c;color: white;}
+        .text_content{margin-bottom: 1rem;overflow: hidden;}
+        {/literal}
+    </style>
+{/block}
+
+{block name=main_left}
+        <div class="main_content">
+          <div class="title" >
+          <h2>{$data.article_title}</h2>
+          </div>
+          <div class="content_user">
+        
+            <a>
+            <img  src="/res/img/example.jpg"> 
+            </a>
+            <label>发布于{date('Y-m-d',time($data.create_time))}</label>
+            <a href="">{$data.user_name}</a>
+          </div>
+          <hr>
+          <div class="content_text">
+          <div class="text_content">
+          <span>{$data.article_content}</span>
+          </div>
+          <div class="text_reply">
+          </div>
+          </div>
+        </div>
+       {if isset($smarty.session.name) }
+        <div class="my_answer">
+        <p>发表评论</p>
+        <textarea class="my_answer_content"></textarea>
+        <button onclick="my_ti()">发表评论</button>
+        </div>
+
+        {/if}
+
+        <div class="article_answer">
+           <div class="answer_title">评论<label></label></div>
+           <hr>
+           {foreach from=$answerlist item=foo  key=k}
+           <div>
+           <img src="/res/img/example.jpg" style="width:2rem;height:2rem">
+           <a >{$foo.user_name}</a>
+           </div>
+           <div class="answer_content">{$foo.answer_content}</div> 
+           <hr >
+           {/foreach}
+        </div>
+      </div>
+{/block}
+
+{block name=script}
+     <script src="http://code.jquery.com/jquery.js"></script>
+
+      <script type="text/javascript">
+      $('.answer_title label').text('({$num}条)')
+      function my_ti(){
+        var content=$(".my_answer_content").val()
+        var articleid={$id}
+        var data={}
+        data['content']=content
+        data['articleid']=articleid
+        $.ajax({
+          type:'post',
+          url:'/index/answer/answer',
+          data:data,
+          dataType:'json',
+          success:function(data){
+            alert(data.message)
+            $(".my_answer_content").val('')
+            location.reload();
+
+
+          },
+        })
+      }
+      $("#upfile").change(function(){
+        var formData = new FormData($("#dd")[0]);
+        $.ajax({
+          type:"post",
+          url:"/index.php/index/index/updata",
+          data:formData,
+          processData: false,
+          contentType: false,
+          async: false,
+           cache: false,
+          success:function(data){
+            alert(data)
+          },
+
+        })
+      })
+      </script>
+
+
+{/block}
+
+
+
